@@ -17,6 +17,7 @@ public class Ad implements Serializable {
     public Long id;
     @TableField
     public String image;
+    //123
     @TableField(exist = false)
     public MultipartFile imageFile;
     @TableField
