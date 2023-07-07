@@ -54,7 +54,7 @@ public class MailController {
             mMessageHelper.setTo(sendto);//收件人邮箱
             mMessageHelper.setSubject("TestCaptcha");//邮件的主题
             mMessageHelper.setText("验证码："+captcha+" 60秒有效");//邮件的文本内容，true表示文本以html格式打开
-//            javaMailSender.send(mMessage);//发送邮件
+            javaMailSender.send(mMessage);//发送邮件
             redisTemplate.boundValueOps(sendto).set(captcha,1, TimeUnit.MINUTES);
         } catch (MessagingException e) {
             e.printStackTrace();
