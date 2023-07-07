@@ -17,11 +17,12 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.gk.study.entity.User;
 import com.gk.study.service.UserService;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
-@Controller
+@RestController
 @RequestMapping("/mail")
 public class MailController {
     @Resource
@@ -33,7 +34,7 @@ public class MailController {
     @Autowired
     UserService userService;
     @RequestMapping(value="/send",method= RequestMethod.POST)
-    public String sendMail03(HttpServletRequest request) {
+    public APIResponse sendMail03(HttpServletRequest request) {
         MimeMessage mMessage = javaMailSender.createMimeMessage();//创建邮件对象
         MimeMessageHelper mMessageHelper;
         String from = "1347755698@qq.com";
@@ -54,48 +55,42 @@ public class MailController {
             mMessageHelper.setSubject("TestCaptcha");//邮件的主题
             mMessageHelper.setText("验证码："+captcha+" 60秒有效");//邮件的文本内容，true表示文本以html格式打开
 //            javaMailSender.send(mMessage);//发送邮件
-            //      添加到redis
-            //      redistemplate.opsForValue().set("gytide@qq.com", captcha,30);
-//            redisTemplate.boundValueOps(sendto).set(captcha,1, TimeUnit.MINUTES);
+            redisTemplate.boundValueOps(sendto).set(captcha,1, TimeUnit.MINUTES);
         } catch (MessagingException e) {
             e.printStackTrace();
-//            return new APIResponse(ResponeCode.SUCCESS, "已成功发送");
-            return  "error";
+            return new APIResponse(ResponeCode.FAIL,"发送出错");
         }
-//        return new APIResponse(ResponeCode.SUCCESS, "已成功发送");
-        return  "ashdjgajhs";
-    }
-
-    @RequestMapping(value = "/test",method = RequestMethod.POST)
-    public String test(HttpServletRequest request){
-//        return new APIResponse(ResponeCode.SUCCESS,"测试");
-        return "asdasd";
+        return new APIResponse(ResponeCode.SUCCESS,"已成功发送");
     }
 
     @RequestMapping(value="/verify",method= RequestMethod.POST)
-    public String verifyCaptcha(HttpServletRequest request) {
+    public APIResponse verifyCaptcha(HttpServletRequest request) {
 
         System.out.println(request.getParameter("usermail"));
         System.out.println(request.getParameter("captcha"));
-//        return new APIResponse(ResponeCode.SUCCESS,"测试");
         String usermail = request.getParameter("usermail");//待验证的用户邮箱
         String captcha = request.getParameter("captcha");//待验证的验证码
 
-        System.out.println(redisTemplate.opsForValue().get(usermail));
+        String captchaToveriify = redisTemplate.boundValueOps(usermail).get();
+        System.out.println(captchaToveriify);
 
-        System.out.println(usermail+"====="+captcha);
-        if(redisTemplate.hasKey(usermail)){
-            if(captcha == redisTemplate.opsForValue().get(usermail)){
-               User responseUser = userService.getMailUser(usermail);
-               System.out.println(responseUser);
-            }
+        if(captchaToveriify == null){
+            return new APIResponse(ResponeCode.FAIL,"未发送或已失效");
         }
         else {
-//            return new APIResponse(ResponeCode.SUCCESS, "已成功发送", "");
-
+            if(captchaToveriify.equals(captcha)){
+                System.out.println("验证成功");
+                User responseUser = userService.getMailUser(usermail);
+                System.out.println(responseUser);
+                return new APIResponse(ResponeCode.SUCCESS,"验证成功",responseUser);
+            }
+            else {
+                System.out.println("验证失败");
+                return new APIResponse(ResponeCode.FAIL,"验证失败");
+            }
         }
+
 //        return new APIResponse(ResponeCode.SUCCESS, "已成功发送", "");
-        return  "sad";
     }
 
 
