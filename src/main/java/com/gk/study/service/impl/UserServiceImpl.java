@@ -37,12 +37,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         return userMapper.selectOne(queryWrapper);
     }
 
-    @Override
-    public User getNormalUser(User user) {
+    public User getNormalUser(User user){
         QueryWrapper<User> queryWrapper = new QueryWrapper();
         queryWrapper.eq("username", user.getUsername());
         queryWrapper.eq("password", user.getPassword());
-        queryWrapper.eq("role", "1");
+        queryWrapper.gt("role", "1");
+        return userMapper.selectOne(queryWrapper);
+    }
+    @Override
+    public User getMailUser(String  usermail) {
+        QueryWrapper<User> queryWrapper = new QueryWrapper();
+        queryWrapper.eq("pushEmail", usermail);
         return userMapper.selectOne(queryWrapper);
     }
 

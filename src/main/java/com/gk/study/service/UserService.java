@@ -9,6 +9,8 @@ public interface UserService {
     List<User> getUserList(String keyword);
     User getAdminUser(User user);
     User getNormalUser(User user);
+
+    User getMailUser(String usermail);
     void createUser(User user);
     void deleteUser(String id);
 
