@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.jar.Pack200;
 
 @RestController
 @RequestMapping("/order")
@@ -88,4 +89,37 @@ public class OrderController {
         return new APIResponse(ResponeCode.SUCCESS, "取消成功");
     }
 
+    //增加，老师确认订单
+    @Access(level = AccessLevel.TEACHER)
+    @RequestMapping(value = "/confirm", method = RequestMethod.POST)
+    @Transactional
+    public APIResponse confirmOrder(long id) throws IOException{
+        Order order = new Order();
+        order.setId(id);
+        order.setStatus("0");
+        service.updateOrder(order);
+        return new APIResponse(ResponeCode.SUCCESS, "课程预约已确认");
+    }
+//
+    //课程上完后，课程状态变为2，表示课程已上完,填写评价 由学生确认课程已上完？
+    @Access(level = AccessLevel.LOGIN)
+    @RequestMapping(value = "/finish", method = RequestMethod.POST)
+    @Transactional
+    public APIResponse finishOrder(long id, String comment) throws IOException{
+        Order order = new Order();
+        order.setId(id);
+        order.setStatus("2");
+        order.setRemark(comment);
+        service.updateOrder(order);
+        return new APIResponse(ResponeCode.SUCCESS, "课程已完成!");
+    }
+//
+//    //增加，老师根据订单状态查看订单=查看课程预约
+    @Access(level = AccessLevel.TEACHER)
+    @RequestMapping(value = "/browse", method = RequestMethod.POST)
+    @Transactional
+    public APIResponse browseOrder(String thingid, String status) throws IOException{
+        List<Order> list =  service.teacherGetOrderListByStatus(thingid, status);
+        return new APIResponse(ResponeCode.SUCCESS, "查询成功", list);
+    }
 }

@@ -19,4 +19,7 @@ public interface ThingService {
     void addCollectCount(String thingId);
 
     List<Thing> getUserThing(String userId);
+
+    List<Thing> getUserThingbyLoc(String thingLoc);
+
 }

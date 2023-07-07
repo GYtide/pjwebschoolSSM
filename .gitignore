@@ -1,4 +1,7 @@
+<<<<<<< HEAD
+=======
 target/
 .idea/.gitignore
+>>>>>>> c44c010a62e3764d3af934485f101902a0939643
 .idea/
 my-log/

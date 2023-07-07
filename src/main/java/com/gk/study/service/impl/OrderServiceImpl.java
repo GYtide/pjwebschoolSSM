@@ -24,7 +24,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         long ct = System.currentTimeMillis();
         order.setOrderTime(String.valueOf(ct));
         order.setOrderNumber(String.valueOf(ct));
-        order.setStatus("1");
+        order.setStatus("1"); //订单生成默认状态为1，表示预定状态，家教确认后订单状态变为0，表示已成功预约
         mapper.insert(order);
     }
 
@@ -49,4 +49,11 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 //        queryWrapper.orderBy(true, false, "order_time");
 //        return mapper.selectList(queryWrapper);
     }
+
+    @Override
+    public List<Order> teacherGetOrderListByStatus(String thingid, String status) {
+        return mapper.teacherGetOrderListByStatus(thingid, status);
+    }
+
+
 }

@@ -41,6 +41,14 @@ public class ThingController {
         return new APIResponse(ResponeCode.SUCCESS, "查询成功", list);
     }
 
+    //07/05增加，按地区查找老师
+    @RequestMapping(value = "/detailbyloc", method = RequestMethod.GET)
+    public APIResponse region(String location){
+        List<Thing> list = service.getUserThingbyLoc(location);
+
+        return new APIResponse(ResponeCode.SUCCESS, "查询成功", list);
+    }
+
     @RequestMapping(value = "/detail", method = RequestMethod.GET)
     public APIResponse detail(String id){
         Thing thing =  service.getThingById(id);
