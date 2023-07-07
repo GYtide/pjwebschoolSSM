@@ -18,6 +18,8 @@ public class User implements Serializable {
     public static final int NormalUser = 1;
     public static final int DemoUser = 2;
     public static final int AdminUser = 3;
+    public static final int TeacherUser = 5;
+
 
     @TableId(value = "id",type = IdType.AUTO)
     public String id;
