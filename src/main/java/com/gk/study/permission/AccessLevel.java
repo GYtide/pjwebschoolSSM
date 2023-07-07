@@ -7,7 +7,9 @@ public enum AccessLevel {
     LOGIN(1, "all"), // 登录用户
     DEMO(2, "demo"), // 演示账号
     ADMIN(3, "admin"), // 管理员
-    SUPER(4, "super"); // 超级管理员
+    SUPER(4, "super"), // 超级管理员
+    TEACHER(5, "teacher");
+
 
     int code;
     String msg;

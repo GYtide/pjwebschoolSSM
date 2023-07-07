@@ -15,7 +15,7 @@ public class MyConfig implements WebMvcConfigurer {
                 .allowCredentials(true)
                 .allowedMethods("*");//"GET", "HEAD", "POST", "PUT", "DELETE", "OPTIONS"
     }
-
+//123
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         // 自定义拦截器

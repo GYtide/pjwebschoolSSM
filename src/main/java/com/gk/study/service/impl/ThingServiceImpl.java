@@ -143,6 +143,14 @@ public class ThingServiceImpl extends ServiceImpl<ThingMapper, Thing> implements
         return mapper.selectList(queryWrapper);
     }
 
+    //07/05晚上修改，根据地区选择老师
+    @Override
+    public List<Thing> getUserThingbyLoc(String thingLoc) {
+        QueryWrapper<Thing> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("location", thingLoc);
+        return mapper.selectList(queryWrapper);
+    }
+
     public void setThingTags(Thing thing) {
         // 删除tag
         Map<String, Object> map = new HashMap<>();

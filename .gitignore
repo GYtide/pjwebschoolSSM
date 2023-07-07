@@ -1,5 +1,14 @@
+<<<<<<< HEAD
 .idea/
 target/study-0.0.1-SNAPSHOT.jar.original
 target/classes/application.properties
 target/
+=======
+<<<<<<< HEAD
+=======
+target/
+.idea/.gitignore
+>>>>>>> c44c010a62e3764d3af934485f101902a0939643
+.idea/
+>>>>>>> c965d1c05b9dff4edd944399e7cbc751b3d40f7a
 my-log/

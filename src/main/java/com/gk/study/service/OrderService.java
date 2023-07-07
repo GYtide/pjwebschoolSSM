@@ -13,4 +13,6 @@ public interface OrderService {
     void updateOrder(Order order);
 
     List<Order> getUserOrderList(String userId, String status);
+
+    List<Order> teacherGetOrderListByStatus(String thingid, String status);
 }
