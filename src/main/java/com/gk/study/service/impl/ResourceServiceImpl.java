@@ -20,18 +20,18 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resou> impl
     }
 
     @Override
-    public List<Resou> getResourceListByTid(String Tid) {
+    public List<Resou> getResourceListByTid(String tid) {
         QueryWrapper<Resou> queryWrapper=new QueryWrapper<>();
-        queryWrapper.eq("Tid",Tid);
+        queryWrapper.eq("tid",tid);
         queryWrapper.orderBy(true, false, "create_time");
         return mapper.selectList(queryWrapper);
     }
 
     @Override
-    public void createResource(Resou Resource) {
-        System.out.println(Resource);
-        Resource.setCreateTime(String.valueOf(System.currentTimeMillis()));
-        mapper.insert(Resource);
+    public void createResource(Resou resource) {
+        System.out.println(resource);
+        resource.setCreateTime(String.valueOf(System.currentTimeMillis()));
+        mapper.insert(resource);
     }
 
     @Override

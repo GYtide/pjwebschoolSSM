@@ -4,6 +4,7 @@ import com.gk.study.common.APIResponse;
 import com.gk.study.common.ResponeCode;
 import com.gk.study.entity.Ad;
 import com.gk.study.entity.Resou;
+import com.gk.study.entity.Thing;
 import com.gk.study.permission.Access;
 import com.gk.study.permission.AccessLevel;
 import com.gk.study.service.ResourceService;
@@ -15,9 +16,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -31,8 +34,9 @@ public class ResourceController {
     @Autowired
     ResourceService service;
 
-//    @Value("${File.uploadPath}")
-//    private String uploadPath;
+
+    @Value("${File.uploadPath}")
+    private String uploadPath;
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public APIResponse list(){
@@ -48,8 +52,17 @@ public class ResourceController {
 
     @RequestMapping(value = "/create", method = RequestMethod.POST)
     @Transactional
-    public APIResponse create(Resou resource) throws IOException {
-        service.createResource(resource);
+    public APIResponse create(Resou resou) throws IOException {
+        System.out.println(resou);
+
+//        存入文件,并将地址存入
+        String url = saveResource(resou);
+        if(!StringUtils.isEmpty(url)) {
+            resou.link = url;
+        }
+        // 调用服务层方法
+         service.createResource(resou);
+
         return new APIResponse(ResponeCode.SUCCESS, "创建成功");
     }
 
@@ -64,5 +77,26 @@ public class ResourceController {
     public APIResponse update(Resou resource) throws IOException {
         service.updateResource(resource);
         return new APIResponse(ResponeCode.SUCCESS, "更新成功");
+    }
+
+    public String saveResource(Resou resou) throws IOException {
+        MultipartFile file = resou.getFile();
+        String newFileName = null;
+        if(file !=null && !file.isEmpty()) {
+            // 存文件
+            String oldFileName = file.getOriginalFilename();
+            String randomStr = UUID.randomUUID().toString();
+            newFileName = randomStr + oldFileName.substring(oldFileName.lastIndexOf("."));
+            String filePath = uploadPath + File.separator + "resource"+ File.separator + newFileName;
+            File destFile = new File(filePath);
+            if(!destFile.getParentFile().exists()){
+                destFile.getParentFile().mkdirs();
+            }
+            file.transferTo(destFile);
+        }
+        if(!StringUtils.isEmpty(newFileName)) {
+            resou.link = newFileName;
+        }
+        return newFileName;
     }
 }
