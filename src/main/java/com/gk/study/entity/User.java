@@ -55,7 +55,8 @@ public class User implements Serializable {
     public String pushEmail;
     @TableField
     public String pushSwitch;
-
+    @TableField(exist = false)
+    public String captcha;
 
 
 }

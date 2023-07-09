@@ -39,13 +39,14 @@ public class MailController {
         MimeMessageHelper mMessageHelper;
         String from = "1347755698@qq.com";
         String sendto = request.getParameter("usermail");//这里利用request接受前台数据，接受的收件人地址
-        System.out.println(sendto);
+        String sendtype = request.getParameter("sendtype");//发送邮箱的目的，如果是 register 注册需要查重
+        System.out.println(sendtype+"   "+sendto);
 
-//        String emailname = request.getParameter("emailname");//接受的邮件主题
-//        String emailcontent = request.getParameter("emailcontent");//接受的邮件内容
-//        String sendto = "gytide@qq.com";//这里利用request接受前台数据，接受的收件人地址
-//        String emailname = "aaabbb";//接受的邮件主题
-//        String emailcontent = "123";//接受的邮件内容
+        // 邮箱查重
+        if( sendtype.equals("register") && userService.getMailUser(sendto) != null){
+            return new APIResponse(ResponeCode.FAIL, "该邮箱已注册");
+        }
+
         try {
             //      生成验证码并发送
             String  captcha = generateCaptcha(4);
@@ -62,7 +63,6 @@ public class MailController {
         }
         return new APIResponse(ResponeCode.SUCCESS,"已成功发送");
     }
-
     @RequestMapping(value="/verify",method= RequestMethod.POST)
     public APIResponse verifyCaptcha(HttpServletRequest request) {
 

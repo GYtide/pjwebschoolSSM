@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
 import org.springframework.util.StringUtils;
@@ -31,6 +32,9 @@ public class UserController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    private StringRedisTemplate redisTemplate;
 
     @Value("${File.uploadPath}")
     private String uploadPath;
@@ -82,7 +86,25 @@ public class UserController {
 
         if (!StringUtils.isEmpty(user.getUsername())
                 && !StringUtils.isEmpty(user.getPassword())
-                && !StringUtils.isEmpty(user.getRePassword())) {
+                && !StringUtils.isEmpty(user.getRePassword())
+                && !StringUtils.isEmpty(user.getCaptcha())) {
+
+            String captchaToveriify = redisTemplate.boundValueOps(user.getEmail()).get();
+            // 验证码
+            System.out.println(user.getEmail());
+
+            if(user.getEmail() == null){
+                return new APIResponse(ResponeCode.FAIL,"未发送或已失效");
+            }
+            else {
+                if(captchaToveriify.equals(user.getCaptcha())){
+                    System.out.println("验证成功");
+                }
+                else {
+                    System.out.println("验证失败");
+                    return new APIResponse(ResponeCode.FAIL,"验证失败");
+                }
+            }
             // 查重
             if(userService.getUserByUserName(user.getUsername()) != null) {
                 return new APIResponse(ResponeCode.FAIL, "用户名重复");
@@ -103,7 +125,7 @@ public class UserController {
                 user.avatar = avatar;
             }
             // 设置角色
-            user.setRole(String.valueOf(User.NormalUser));
+            user.setRole(String.valueOf(User.DemoUser));
             // 设置状态
             user.setStatus("0");
             user.setCreateTime(String.valueOf(System.currentTimeMillis()));
