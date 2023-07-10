@@ -8,6 +8,9 @@ import com.gk.study.mapper.OpLogMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -19,7 +22,7 @@ public class OpLogServiceImpl extends ServiceImpl<OpLogMapper, OpLog> implements
     public List<OpLog> getOpLogList() {
         QueryWrapper<OpLog> queryWrapper = new QueryWrapper();
         queryWrapper.orderBy(true, false, "re_time");
-        queryWrapper.last("limit 0, 1000"); // 前1000条
+        queryWrapper.last("limit 0, 10000"); // 前1000条
         return mapper.selectList(queryWrapper);
     }
 
@@ -45,5 +48,22 @@ public class OpLogServiceImpl extends ServiceImpl<OpLogMapper, OpLog> implements
         queryWrapper.orderBy(true, false, "re_time");
         queryWrapper.last("limit 0, 1000"); // 前1000条
         return mapper.selectList(queryWrapper);
+    }
+
+    @Override
+    public List<OpLog>getOpLogCount(){
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        Date end = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(end);
+        calendar.add(Calendar.DAY_OF_MONTH, -7);
+        Date start = calendar.getTime();
+
+        QueryWrapper<OpLog> queryWrapper = new QueryWrapper<>();
+        queryWrapper.between("reTimeNew", dateFormat.format(start), dateFormat.format(end));
+
+        List<OpLog> opLogs = mapper.selectList(queryWrapper);
+
+        return opLogs;
     }
 }

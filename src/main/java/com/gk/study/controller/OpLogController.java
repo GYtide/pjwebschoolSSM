@@ -31,6 +31,12 @@ public class OpLogController {
         return new APIResponse(ResponeCode.SUCCESS, "查询成功", list);
     }
 
+    @RequestMapping(value = "/count", method = RequestMethod.GET)
+    public APIResponse conut(){
+        List<OpLog> list =  service.getOpLogCount();
+        return new APIResponse(ResponeCode.SUCCESS, "查询成功", list);
+    }
+
     @RequestMapping(value = "/loginLogList", method = RequestMethod.GET)
     public APIResponse loginLogList(){
         List<OpLog> list =  service.getLoginLogList();

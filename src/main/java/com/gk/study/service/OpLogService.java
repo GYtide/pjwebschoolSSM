@@ -10,6 +10,7 @@ public interface OpLogService {
     void createOpLog(OpLog opLog);
     void deleteOpLog(String id);
     void updateOpLog(OpLog opLog);
-
     List<OpLog> getLoginLogList();
+
+    List<OpLog> getOpLogCount();
 }

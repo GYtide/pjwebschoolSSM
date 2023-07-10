@@ -1,6 +1,7 @@
 package com.gk.study.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.gk.study.service.OverViewService;
 import com.sun.management.OperatingSystemMXBean;
 import com.gk.study.common.APIResponse;
 import com.gk.study.common.ResponeCode;
@@ -35,6 +36,9 @@ public class OverViewController {
 
     @Autowired
     OverviewMapper overviewMapper;
+
+    @Autowired
+    OverViewService overViewService;
 
     private final static Logger logger = LoggerFactory.getLogger(OverViewController.class);
 
@@ -74,38 +78,9 @@ public class OverViewController {
 
     @RequestMapping(value = "/count", method = RequestMethod.GET)
     public APIResponse count() {
-
-
-        Map<String, Object> map = new HashMap<>();
-
-
-        // 热门
-        List<Object> popularThings = overviewMapper.getPopularThing();
-        map.put("popularThings", popularThings);
-
-        // 热门分类
-        List<Object> popularClassification = overviewMapper.getPopularClassification();
-        map.put("popularClassification", popularClassification);
-
         // 网站流量
-        List<Object> visitList = new ArrayList<>();
-        List<String> sevenList = getSevenDate();
-        for(String day: sevenList){
-            Map<String, String> visitMap = new HashMap<>();
-            visitMap.put("day", day);
-            int pv = 0;
-            int uv = 0;
-            List<VisitData> webVisitData = overviewMapper.getWebVisitData(day);
-            for(VisitData visitData: webVisitData) {
-                pv += visitData.count;
-            }
-            uv = webVisitData.size();
-            visitMap.put("pv", String.valueOf(pv));
-            visitMap.put("uv", String.valueOf(uv));
-            visitList.add(visitMap);
-        }
-        map.put("visitList", visitList);
-
+        Map<String,Integer> map = overViewService.getWebVisitData();
+        System.out.println(map);
         return new APIResponse(ResponeCode.SUCCESS, "查询成功", map);
     }
 

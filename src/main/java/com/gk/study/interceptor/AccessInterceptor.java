@@ -24,6 +24,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 
 /**
@@ -119,6 +121,8 @@ public class AccessInterceptor extends HandlerInterceptorAdapter {
         opLog.setReUa(request.getHeader(HttpHeaders.USER_AGENT));
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
         opLog.setReTime(formatter.format(new Date()));
+        LocalDateTime currentTime = LocalDateTime.now();
+        opLog.setReTimeNew(currentTime);
         opLog.setAccessTime(String.valueOf(diff));
         service.createOpLog(opLog);
     }

@@ -1,11 +1,10 @@
 package com.gk.study.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Data
 @TableName("b_op_log")
@@ -26,5 +25,6 @@ public class OpLog implements Serializable {
     public String reContent;
     @TableField
     public String accessTime;
-
+    @TableField
+    public LocalDateTime reTimeNew;
 }
