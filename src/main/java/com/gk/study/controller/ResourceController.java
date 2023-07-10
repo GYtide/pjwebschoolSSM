@@ -29,7 +29,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/resource")
 public class ResourceController {
-    private final static Logger logger = LoggerFactory.getLogger(AdController.class);
+    private final static Logger logger = LoggerFactory.getLogger(ResourceController.class);
 
     @Autowired
     ResourceService service;
